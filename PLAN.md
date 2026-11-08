@@ -9,11 +9,11 @@
 - [x] Rating: Glicko-2 per time control, expected gain/loss, rating history, leaderboards
 - [x] Lobby seeks, matchmaking queues in Redis, invite links, rematch
 - [x] Fair play: post-game Stockfish check, flags, moderator review, marking and refunds
-- [ ] `apps/web`: layout, theme, routing, auth pages, chessground board
-- [ ] Lobby, online game page, play vs engine, hot-seat, invite flow
-- [ ] Stockfish WASM worker, analysis board with eval bar and multi-PV, variations
-- [ ] Import/export PGN and FEN, multi-game picker
-- [ ] Game review: classification, accuracy, eval graph, keyboard navigation
-- [ ] Profile with rating graph, stats, game list; leaderboards; moderation page
-- [ ] Docker Compose, Dockerfiles, `.env.example`
-- [ ] README, LICENSE (GPL-3.0), GitHub Actions CI
+- [x] `apps/web`: layout, theme, routing, auth pages, chessground board
+- [x] Lobby, online game page, play vs engine, hot-seat, invite flow
+- [x] Stockfish WASM worker, analysis board with eval bar and multi-PV, variations
+- [x] Import/export PGN and FEN, multi-game picker
+- [x] Game review: classification, accuracy, eval graph, keyboard navigation
+- [x] Profile with rating graph, stats, game list; leaderboards; moderation page
+- [x] Docker Compose, Dockerfiles, `.env.example`
+- [x] README, LICENSE (GPL-3.0), GitHub Actions CI
