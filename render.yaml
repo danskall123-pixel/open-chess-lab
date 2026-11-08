@@ -3,6 +3,7 @@ services:
     name: open-chess-lab
     runtime: docker
     plan: free
+    region: frankfurt
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /api/health
@@ -28,5 +29,6 @@ services:
   - type: keyvalue
     name: open-chess-lab-redis
     plan: free
+    region: frankfurt
     maxmemoryPolicy: noeviction
     ipAllowList: []
