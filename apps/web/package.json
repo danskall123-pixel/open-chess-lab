@@ -1,0 +1,30 @@
+{
+  "name": "@open-chess-lab/web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/copy-stockfish.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/copy-stockfish.mjs",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@open-chess-lab/shared": "0.1.0",
+    "chess.js": "^1.4.0",
+    "chessground": "^9.2.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^7.18.5",
+    "stockfish": "^19.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "vite": "^8.3.6"
+  }
+}
