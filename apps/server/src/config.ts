@@ -4,6 +4,11 @@ const booleanFlag = z
   .enum(['true', 'false', '1', '0'])
   .transform((value) => value === 'true' || value === '1');
 
+const optionalText = z
+  .string()
+  .optional()
+  .transform((value) => (value && value.trim().length > 0 ? value : undefined));
+
 const configSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   HOST: z.string().default('0.0.0.0'),
@@ -14,10 +19,10 @@ const configSchema = z.object({
   APP_ORIGIN: z.string().url().default('http://localhost:5173'),
   COOKIE_SECURE: booleanFlag.default(false),
   SESSION_TTL_DAYS: z.coerce.number().int().positive().default(30),
-  SMTP_URL: z.string().optional(),
+  SMTP_URL: optionalText,
   MAIL_FROM: z.string().default('Open Chess Lab <no-reply@localhost>'),
-  WEB_DIST_DIR: z.string().optional(),
-  STOCKFISH_PATH: z.string().optional(),
+  WEB_DIST_DIR: optionalText,
+  STOCKFISH_PATH: optionalText,
   FAIR_PLAY_ENABLED: booleanFlag.default(true),
   FAIR_PLAY_DEPTH: z.coerce.number().int().min(4).max(30).default(12),
 });

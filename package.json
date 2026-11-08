@@ -13,7 +13,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "npm run build -w @open-chess-lab/shared && concurrently -n shared,server,web -c blue,green,magenta \"npm run dev -w @open-chess-lab/shared\" \"npm run dev -w @open-chess-lab/server\" \"npm run dev -w @open-chess-lab/web\"",
+    "dev": "concurrently -k -n server,web -c green,magenta \"npm run dev -w @open-chess-lab/server\" \"npm run dev -w @open-chess-lab/web\"",
     "build": "npm run build -w @open-chess-lab/shared && npm run build -w @open-chess-lab/server && npm run build -w @open-chess-lab/web",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",

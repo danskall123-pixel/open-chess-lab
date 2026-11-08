@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { Role, Speed } from '@prisma/client';
-import { hashPassword } from '../src/auth/password.js';
+import { hashPassword } from './auth/password.js';
 
 interface SeedUser {
   username: string;
