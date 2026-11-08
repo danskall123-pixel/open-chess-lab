@@ -32,6 +32,7 @@ export function meResponse(services: Services, session: SessionContext): MeRespo
           marked: user.markedAt !== null,
         }
       : null,
+    playerKey: identityOf(session).key,
     guestName: session.guestName,
     csrfToken: session.csrfToken,
     activeRatedGameId: services.games.activeRatedGameIdOf(identityOf(session).key),

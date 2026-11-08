@@ -8,6 +8,7 @@ import {
   resultOf,
   scoreFor,
   STANDARD_START_FEN,
+  terminalEvaluation,
   timeoutOutcome,
 } from '../src/index.js';
 
@@ -89,5 +90,19 @@ describe('results', () => {
     expect(scoreFor(whiteWin, 'black')).toBe(0);
     expect(scoreFor(draw, 'black')).toBe(0.5);
     expect(describeOutcome(whiteWin)).toBe('White wins · Resignation');
+  });
+});
+
+describe('terminalEvaluation', () => {
+  it('scores checkmates for the winner and draws as equal', () => {
+    expect(terminalEvaluation(playSan(['f3', 'e5', 'g4', 'Qh4#']))?.score).toEqual({
+      kind: 'cp',
+      value: -1000,
+    });
+    expect(terminalEvaluation(new Chess('7k/5Q2/6K1/8/8/8/8/8 b - - 0 1'))?.score).toEqual({
+      kind: 'cp',
+      value: 0,
+    });
+    expect(terminalEvaluation(new Chess())).toBeNull();
   });
 });

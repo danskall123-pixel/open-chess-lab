@@ -286,6 +286,7 @@ export class LiveGame {
     const playerView = (color: Color): GamePlayerView => {
       const seat = this.seats[color];
       return {
+        key: seat.player.key,
         userId: seat.player.userId,
         name: seat.player.name,
         isGuest: seat.player.userId === null,

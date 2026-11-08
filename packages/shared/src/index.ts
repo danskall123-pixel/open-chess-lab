@@ -6,6 +6,7 @@ export * from './glicko2.js';
 export * from './rating.js';
 export * from './matchmaking.js';
 export * from './review.js';
+export * from './terminal.js';
 export * from './fairPlay.js';
 export * from './chessUtils.js';
 export * from './pgnImport.js';

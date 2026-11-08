@@ -78,3 +78,17 @@ export function sanMoves(initialFen: string, movesUci: readonly string[]): strin
   const chess = new Chess(initialFen);
   return movesUci.map((uci) => tryMove(chess, uci)?.san ?? uci);
 }
+
+export function positionAfter(
+  initialFen: string,
+  movesUci: readonly string[],
+  ply: number,
+): string {
+  return replayUciMoves(initialFen, movesUci.slice(0, ply)).fen();
+}
+
+export function lastMoveSquares(movesUci: readonly string[], ply: number): [string, string] | null {
+  const uci = ply > 0 ? movesUci[ply - 1] : undefined;
+  const parsed = uci ? parseUci(uci) : null;
+  return parsed ? [parsed.from, parsed.to] : null;
+}

@@ -1,27 +1,9 @@
 import { Chess } from 'chess.js';
 import type { GameReview, PositionEvaluation } from '@open-chess-lab/shared';
-import {
-  CENTIPAWN_CAP,
-  colorFromTurn,
-  oppositeColor,
-  reviewGame,
-  tryMove,
-} from '@open-chess-lab/shared';
+import { colorFromTurn, reviewGame, terminalEvaluation, tryMove } from '@open-chess-lab/shared';
 
 export interface PositionEvaluator {
   evaluate(fen: string): Promise<PositionEvaluation>;
-}
-
-export function terminalEvaluation(chess: Chess): PositionEvaluation | null {
-  if (chess.isCheckmate()) {
-    const winner = oppositeColor(colorFromTurn(chess.turn()));
-    return {
-      score: { kind: 'cp', value: winner === 'white' ? CENTIPAWN_CAP : -CENTIPAWN_CAP },
-      bestMoveUci: null,
-    };
-  }
-  if (chess.isDraw()) return { score: { kind: 'cp', value: 0 }, bestMoveUci: null };
-  return null;
 }
 
 export async function analyzeGame(

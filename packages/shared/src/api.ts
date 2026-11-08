@@ -22,6 +22,7 @@ export interface SessionUser {
 
 export interface MeResponse {
   user: SessionUser | null;
+  playerKey: string;
   guestName: string;
   csrfToken: string;
   activeRatedGameId: string | null;
@@ -136,6 +137,7 @@ export interface AcceptSeekResponse {
 }
 
 export interface GamePlayerView {
+  key: string;
   userId: string | null;
   name: string;
   isGuest: boolean;
