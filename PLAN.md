@@ -1,8 +1,8 @@
 # Plan
 
-- [ ] Monorepo scaffold: npm workspaces, TypeScript, ESLint (with a no-comments rule), Prettier, Vitest
-- [ ] `packages/shared`: types, time controls, clock logic, game-end detection, Glicko-2, matchmaking pairing, move classification and accuracy, PGN/FEN import
-- [ ] Unit tests for every shared module
+- [x] Monorepo scaffold: npm workspaces, TypeScript, ESLint (with a no-comments rule), Prettier, Vitest
+- [x] `packages/shared`: types, time controls, clock logic, game-end detection, Glicko-2, matchmaking pairing, move classification and accuracy, PGN/FEN import
+- [x] Unit tests for every shared module
 - [ ] `apps/server`: config, Fastify app, Prisma schema, migrations, seed
 - [ ] Auth: register, login, logout, password reset, argon2, httpOnly session cookies, CSRF, guest sessions
 - [ ] Real-time games over WebSocket: server-authoritative moves and clocks, lag compensation, draw/resign/abort, disconnect claims, persistence
