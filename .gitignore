@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+.env
+*.log
+.vite
+apps/web/public/stockfish
+apps/server/vendor
