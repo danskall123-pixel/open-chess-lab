@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { isAllowedOrigin, requiresCsrfCheck, tokensMatch } from '../src/auth/csrf.js';
+import {
+  isAllowedOrigin,
+  requestHostsOf,
+  requiresCsrfCheck,
+  tokensMatch,
+} from '../src/auth/csrf.js';
 import { parseClientMessage } from '../src/realtime/clientMessages.js';
 
 describe('CSRF protection', () => {
@@ -21,6 +26,16 @@ describe('CSRF protection', () => {
     expect(isAllowedOrigin('https://chess.example', allowed)).toBe(true);
     expect(isAllowedOrigin('https://evil.example', allowed)).toBe(false);
     expect(isAllowedOrigin(undefined, allowed)).toBe(true);
+  });
+});
+
+describe('same-origin requests', () => {
+  it('accepts an origin that matches the requested host', () => {
+    const allowed = ['http://localhost:5173'];
+    const hosts = requestHostsOf({ host: 'internal:3000', 'x-forwarded-host': 'chess.example' });
+    expect(isAllowedOrigin('https://chess.example', allowed, hosts)).toBe(true);
+    expect(isAllowedOrigin('https://evil.example', allowed, hosts)).toBe(false);
+    expect(isAllowedOrigin('not a url', allowed, hosts)).toBe(false);
   });
 });
 

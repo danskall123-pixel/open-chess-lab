@@ -101,19 +101,20 @@ Every demo password is `password123`. Do not seed demo users in production.
 
 Every variable is listed in [`.env.example`](.env.example).
 
-| Variable                                | Purpose                                                                                           |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                          | PostgreSQL connection string (required)                                                           |
-| `REDIS_URL`                             | Redis connection string                                                                           |
-| `APP_ORIGIN`                            | Public URL of the web app; used for CSRF and WebSocket Origin checks and in password reset links  |
-| `COOKIE_SECURE`                         | Set to `true` when the site is served over HTTPS                                                  |
-| `SESSION_TTL_DAYS`                      | Session lifetime                                                                                  |
-| `SMTP_URL`, `MAIL_FROM`                 | Outgoing mail for password resets; without `SMTP_URL` the reset link is written to the server log |
-| `WEB_DIST_DIR`                          | Optional path to the built web app, so a single Node process serves everything                    |
-| `STOCKFISH_PATH`                        | Optional native Stockfish binary for fair-play checks; defaults to the bundled WebAssembly build  |
-| `FAIR_PLAY_ENABLED`, `FAIR_PLAY_DEPTH`  | Turn post-game checks on or off and set their search depth                                        |
-| `HOST`, `PORT`, `LOG_LEVEL`, `NODE_ENV` | Server basics                                                                                     |
-| `SEED_DEMO_USERS`                       | Docker only: seed the demo users on start                                                         |
+| Variable                                | Purpose                                                                                                                                  |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                          | PostgreSQL connection string (required)                                                                                                  |
+| `REDIS_URL`                             | Redis connection string                                                                                                                  |
+| `APP_ORIGIN`                            | Public URL of the web app; used for CSRF and WebSocket Origin checks and in password reset links                                         |
+| `COOKIE_SECURE`                         | Set to `true` when the site is served over HTTPS                                                                                         |
+| `SESSION_TTL_DAYS`                      | Session lifetime                                                                                                                         |
+| `SMTP_URL`, `MAIL_FROM`                 | Outgoing mail for password resets; without `SMTP_URL` the reset link is written to the server log                                        |
+| `WEB_DIST_DIR`                          | Optional path to the built web app, so a single Node process serves everything                                                           |
+| `STOCKFISH_PATH`                        | Optional native Stockfish binary for fair-play checks; defaults to the bundled WebAssembly build                                         |
+| `FAIR_PLAY_ENABLED`, `FAIR_PLAY_DEPTH`  | Turn post-game checks on or off and set their search depth                                                                               |
+| `HOST`, `PORT`, `LOG_LEVEL`, `NODE_ENV` | Server basics                                                                                                                            |
+| `SEED_DEMO_USERS`                       | Docker only: seed the demo users on start                                                                                                |
+| `VITE_ALLOWED_HOSTS`                    | Dev server only: extra host names Vite may answer to (comma-separated, or `all`), e.g. when opening it through a tunnel or preview proxy |
 
 ## Scripts
 

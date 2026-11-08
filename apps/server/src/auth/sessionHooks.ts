@@ -1,7 +1,13 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { AppConfig } from '../config.js';
 import { forbidden, unauthorized } from '../http/errors.js';
-import { CSRF_HEADER, isAllowedOrigin, requiresCsrfCheck, tokensMatch } from './csrf.js';
+import {
+  CSRF_HEADER,
+  isAllowedOrigin,
+  requestHostsOf,
+  requiresCsrfCheck,
+  tokensMatch,
+} from './csrf.js';
 import type { SessionContext, SessionService, SessionUserRecord } from './sessionService.js';
 
 export const SESSION_COOKIE = 'ocl_session';
@@ -23,7 +29,9 @@ export function registerSessionHooks(
   app.addHook('onRequest', async (request) => {
     request.session = await sessions.resolve(request.cookies[SESSION_COOKIE]);
     if (!requiresCsrfCheck(request.method) || !request.url.startsWith('/api/')) return;
-    if (!isAllowedOrigin(request.headers.origin, [config.APP_ORIGIN])) {
+    if (
+      !isAllowedOrigin(request.headers.origin, [config.APP_ORIGIN], requestHostsOf(request.headers))
+    ) {
       throw forbidden('Cross-origin request rejected.');
     }
     const provided = request.headers[CSRF_HEADER];

@@ -18,10 +18,30 @@ export function tokensMatch(expected: string, provided: string | undefined): boo
   );
 }
 
+function hostOf(origin: string): string | null {
+  try {
+    return new URL(origin).host;
+  } catch {
+    return null;
+  }
+}
+
 export function isAllowedOrigin(
   origin: string | undefined,
   allowedOrigins: readonly string[],
+  requestHosts: readonly string[] = [],
 ): boolean {
   if (origin === undefined) return true;
-  return allowedOrigins.includes(origin);
+  if (allowedOrigins.includes(origin)) return true;
+  const originHost = hostOf(origin);
+  return originHost !== null && requestHosts.includes(originHost);
+}
+
+export function requestHostsOf(headers: Record<string, string | string[] | undefined>): string[] {
+  const forwarded = headers['x-forwarded-host'];
+  const forwardedHosts = (Array.isArray(forwarded) ? forwarded : [forwarded ?? ''])
+    .flatMap((value) => value.split(','))
+    .map((value) => value.trim());
+  const host = typeof headers.host === 'string' ? headers.host : '';
+  return [...forwardedHosts, host].filter((value) => value.length > 0);
 }

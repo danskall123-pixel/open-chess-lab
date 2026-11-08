@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { WebSocket } from 'ws';
 import type { ClientMessage } from '@open-chess-lab/shared';
-import { isAllowedOrigin } from '../auth/csrf.js';
+import { isAllowedOrigin, requestHostsOf } from '../auth/csrf.js';
 import { identityOf } from '../auth/sessionService.js';
 import { HttpError } from '../http/errors.js';
 import type { Services } from '../services.js';
@@ -69,7 +69,8 @@ export function registerSocketRoutes(app: FastifyInstance, services: Services): 
   };
 
   app.get('/ws', { websocket: true }, (socket: WebSocket, request) => {
-    if (!isAllowedOrigin(request.headers.origin, [services.config.APP_ORIGIN])) {
+    const hosts = requestHostsOf(request.headers);
+    if (!isAllowedOrigin(request.headers.origin, [services.config.APP_ORIGIN], hosts)) {
       socket.close(POLICY_VIOLATION, 'Origin not allowed');
       return;
     }
