@@ -1,0 +1,39 @@
+{
+  "name": "@open-chess-lab/server",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --conditions=source --env-file-if-exists=.env src/main.ts",
+    "build": "prisma generate && tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:seed": "tsx --conditions=source prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx --conditions=source prisma/seed.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/rate-limit": "^11.2.2",
+    "@fastify/static": "^10.1.10",
+    "@fastify/websocket": "^11.3.7",
+    "@prisma/client": "^6.19.3",
+    "argon2": "^0.45.2",
+    "chess.js": "^1.4.0",
+    "fastify": "^5.12.8",
+    "ioredis": "^6.0.0",
+    "nodemailer": "^10.4.0",
+    "stockfish": "^19.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^8.0.2",
+    "@types/ws": "^8.18.2",
+    "prisma": "^6.19.3",
+    "tsx": "^4.23.15"
+  }
+}

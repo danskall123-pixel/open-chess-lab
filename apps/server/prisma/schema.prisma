@@ -1,0 +1,180 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  user
+  moderator
+}
+
+enum Speed {
+  bullet
+  blitz
+  rapid
+  classical
+}
+
+enum GameStatus {
+  ongoing
+  finished
+  aborted
+}
+
+enum FlagStatus {
+  open
+  dismissed
+  confirmed
+}
+
+model User {
+  id             String               @id @default(cuid())
+  username       String               @unique
+  usernameKey    String               @unique
+  email          String               @unique
+  passwordHash   String
+  role           Role                 @default(user)
+  markedAt       DateTime?
+  createdAt      DateTime             @default(now())
+  sessions       Session[]
+  ratings        Rating[]
+  ratingHistory  RatingHistory[]
+  whiteGames     Game[]               @relation("WhiteGames")
+  blackGames     Game[]               @relation("BlackGames")
+  passwordResets PasswordResetToken[]
+  flags          FairPlayFlag[]       @relation("FlaggedUser")
+  reviewedFlags  FairPlayFlag[]       @relation("FlagReviewer")
+  refunds        RatingRefund[]
+}
+
+model Session {
+  id         String   @id
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestId    String
+  guestName  String
+  csrfToken  String
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        String    @id
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Rating {
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  speed      Speed
+  rating     Float
+  deviation  Float
+  volatility Float
+  games      Int      @default(0)
+  updatedAt  DateTime @updatedAt
+
+  @@id([userId, speed])
+  @@index([speed, rating])
+}
+
+model RatingHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  speed     Speed
+  rating    Float
+  deviation Float
+  gameId    String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, speed, createdAt])
+}
+
+model Game {
+  id                String         @id
+  whiteUserId       String?
+  whiteUser         User?          @relation("WhiteGames", fields: [whiteUserId], references: [id], onDelete: SetNull)
+  blackUserId       String?
+  blackUser         User?          @relation("BlackGames", fields: [blackUserId], references: [id], onDelete: SetNull)
+  whiteGuestId      String?
+  blackGuestId      String?
+  whiteName         String
+  blackName         String
+  rated             Boolean
+  speed             Speed
+  initialSeconds    Int
+  incrementSeconds  Int
+  source            String
+  initialFen        String
+  moves             String         @default("")
+  status            GameStatus     @default(ongoing)
+  result            String?
+  termination       String?
+  pgn               String?
+  whiteRatingBefore Int?
+  blackRatingBefore Int?
+  whiteRatingDiff   Int?
+  blackRatingDiff   Int?
+  whiteClockMs      Int
+  blackClockMs      Int
+  clockRunning      String?
+  turnStartedAt     DateTime?
+  startedAt         DateTime       @default(now())
+  endedAt           DateTime?
+  fairPlayCheckedAt DateTime?
+  flags             FairPlayFlag[]
+  refunds           RatingRefund[]
+
+  @@index([whiteUserId, startedAt])
+  @@index([blackUserId, startedAt])
+  @@index([status])
+}
+
+model FairPlayFlag {
+  id                   String     @id @default(cuid())
+  userId               String
+  user                 User       @relation("FlaggedUser", fields: [userId], references: [id], onDelete: Cascade)
+  gameId               String
+  game                 Game       @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  color                String
+  analyzedMoves        Int
+  topMoveMatches       Int
+  topMoveRate          Float
+  averageCentipawnLoss Float
+  status               FlagStatus @default(open)
+  reviewedById         String?
+  reviewedBy           User?      @relation("FlagReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt           DateTime?
+  createdAt            DateTime   @default(now())
+
+  @@unique([gameId, userId])
+  @@index([status, createdAt])
+}
+
+model RatingRefund {
+  id           String   @id @default(cuid())
+  gameId       String
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  markedUserId String
+  speed        Speed
+  points       Int
+  createdAt    DateTime @default(now())
+
+  @@unique([gameId, userId])
+}
