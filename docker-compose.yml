@@ -29,6 +29,7 @@ services:
       target: server
     environment:
       DATABASE_URL: postgresql://chess:chess@postgres:5432/openchesslab
+      DIRECT_URL: postgresql://chess:chess@postgres:5432/openchesslab
       REDIS_URL: redis://redis:6379
       APP_ORIGIN: ${APP_ORIGIN:-http://localhost:8080}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}

@@ -16,16 +16,17 @@ FROM deps AS build
 COPY . .
 RUN npm run build
 
-FROM base AS server
-ENV NODE_ENV=production \
-    HOST=0.0.0.0 \
-    PORT=3000
-COPY --from=build /app /app
-WORKDIR /app/apps/server
-EXPOSE 3000
-CMD ["sh", "/app/docker/start-server.sh"]
-
 FROM nginx:1.27-alpine AS web
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/apps/web/dist /usr/share/nginx/html
 EXPOSE 80
+
+FROM base AS server
+ENV NODE_ENV=production \
+    HOST=0.0.0.0 \
+    PORT=3000 \
+    WEB_DIST_DIR=/app/apps/web/dist
+COPY --from=build /app /app
+WORKDIR /app/apps/server
+EXPOSE 3000
+CMD ["sh", "/app/docker/start-server.sh"]

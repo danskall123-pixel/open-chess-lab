@@ -29,8 +29,14 @@ const configSchema = z.object({
 
 export type AppConfig = z.infer<typeof configSchema>;
 
+function withPlatformDefaults(environment: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const publicUrl = environment.RENDER_EXTERNAL_URL;
+  if (environment.APP_ORIGIN || !publicUrl) return environment;
+  return { ...environment, APP_ORIGIN: publicUrl };
+}
+
 export function loadConfig(environment: NodeJS.ProcessEnv = process.env): AppConfig {
-  const parsed = configSchema.safeParse(environment);
+  const parsed = configSchema.safeParse(withPlatformDefaults(environment));
   if (!parsed.success) {
     const problems = parsed.error.issues
       .map((issue) => `${issue.path.join('.')}: ${issue.message}`)

@@ -147,6 +147,25 @@ Whichever way you choose:
 - Proxy WebSocket upgrades on `/ws`.
 - Run one server instance. Live games and clocks are kept in that process's memory (and persisted after every move), so do not load-balance several instances.
 
+## Hosting on Supabase and Render
+
+Supabase hosts the PostgreSQL database. The Node server needs long-lived WebSocket connections and Redis, which Supabase does not run, so the server and Redis run on [Render](https://render.com). Both have free tiers. `render.yaml` describes the Render side.
+
+1. **Create the database.** In Supabase, create a project and save the database password.
+2. **Copy the connection strings.** Open _Connect_ in the Supabase dashboard and copy:
+   - the **Transaction pooler** string (port `6543`). Append `?pgbouncer=true` to it; this is `DATABASE_URL`.
+   - the **Session pooler** string (port `5432`); this is `DIRECT_URL`, used for migrations.
+
+   Replace `[YOUR-PASSWORD]` in both. Use the pooler strings rather than the direct connection, because Render connects over IPv4.
+
+3. **Create the Render services.** In Render, choose _New → Blueprint_, connect this GitHub repository and pick the branch to deploy. Render reads `render.yaml` and proposes a web service (built from the `Dockerfile`) plus a Key Value (Redis) instance.
+4. **Fill in the database settings.** Enter `DATABASE_URL` and `DIRECT_URL` when Render asks, then click _Apply_.
+5. **Wait for the first deploy.** It builds the image, applies the Prisma migrations to Supabase and starts the server. The app is then live at `https://<service-name>.onrender.com`. `APP_ORIGIN` is taken from Render's public URL automatically; set it yourself only when you add a custom domain.
+6. **Optionally add demo users.** Set `SEED_DEMO_USERS=true` for one deploy, then set it back to `false`. To create a moderator, register normally and then run `UPDATE "User" SET role = 'moderator' WHERE username = 'your-name';` in the Supabase SQL editor.
+7. **Optionally send real emails.** Add `SMTP_URL` and `MAIL_FROM` for password reset emails; without them, reset links appear in the Render logs.
+
+Free Render web services sleep after 15 minutes without traffic and take about a minute to wake up. Games that were running when the service went to sleep are restored from the database when it starts again.
+
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push and pull request. It installs dependencies, lints, type-checks, runs the tests, builds every workspace, and applies the migrations and seed against a PostgreSQL service.

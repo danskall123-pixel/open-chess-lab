@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: open-chess-lab
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: open-chess-lab-redis
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: 'true'
+      - key: SEED_DEMO_USERS
+        value: 'false'
+      - key: FAIR_PLAY_DEPTH
+        value: '10'
+      - key: LOG_LEVEL
+        value: info
+
+  - type: keyvalue
+    name: open-chess-lab-redis
+    plan: free
+    maxmemoryPolicy: noeviction
+    ipAllowList: []

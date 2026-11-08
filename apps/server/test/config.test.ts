@@ -15,6 +15,20 @@ describe('loadConfig', () => {
     expect(config.COOKIE_SECURE).toBe(true);
   });
 
+  it('uses the public Render URL as the app origin when none is set', () => {
+    const base = { DATABASE_URL: 'postgresql://localhost/test' };
+    expect(
+      loadConfig({ ...base, RENDER_EXTERNAL_URL: 'https://chess.onrender.com' }).APP_ORIGIN,
+    ).toBe('https://chess.onrender.com');
+    expect(
+      loadConfig({
+        ...base,
+        RENDER_EXTERNAL_URL: 'https://chess.onrender.com',
+        APP_ORIGIN: 'https://chess.example',
+      }).APP_ORIGIN,
+    ).toBe('https://chess.example');
+  });
+
   it('reports missing required values', () => {
     expect(() => loadConfig({})).toThrow(/DATABASE_URL/);
   });

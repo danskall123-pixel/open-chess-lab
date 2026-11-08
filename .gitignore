@@ -6,3 +6,4 @@ coverage
 .vite
 apps/web/public/stockfish
 apps/server/vendor
+dump.rdb
